@@ -1,7 +1,6 @@
 'use client';
 
 import StudentForm from '@/components/StudentForm';
-import LightPillar from '@/components/LightPillar';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import ShinyText from '@/components/ShinyText';
@@ -17,22 +16,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <LightPillar 
-          topColor="#EAB308"
-          bottomColor="#d50021"
-          intensity={0.8}
-          rotationSpeed={0.2}
-          pillarWidth={4}
-          pillarHeight={0.3}
-          glowAmount={0.002}
-          noiseIntensity={0.4}
-          pillarRotation={-15}
-          interactive={false}
-          quality="high"
-        />
-      </div>
-      
       <div className="app-container">
         <header className="border-none mb-12">
           <div className="flex flex-col gap-4">

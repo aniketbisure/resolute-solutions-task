@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StudentForm from '@/components/StudentForm';
 import StudentList from '@/components/StudentList';
 import ShinyText from '@/components/ShinyText';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import LightPillar from '@/components/LightPillar';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
@@ -34,22 +32,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <LightPillar 
-          topColor="#EAB308"
-          bottomColor="#d50021"
-          intensity={1}
-          rotationSpeed={0.3}
-          pillarWidth={3}
-          pillarHeight={0.4}
-          glowAmount={0.002}
-          noiseIntensity={0.5}
-          pillarRotation={25}
-          interactive={false}
-          quality="high"
-        />
-      </div>
-      
       <div className="app-container">
         <header>
           <motion.h1
@@ -59,20 +41,17 @@ export default function Home() {
           >
             <ShinyText text="Management Console" className="text-4xl" />
           </motion.h1>
-          
-          <div className="flex items-center gap-6">
-            <ThemeToggle />
-            <motion.div 
-              className="nav-buttons"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <button onClick={() => { setView('list'); setEditingStudent(null); }}>Records</button>
-              <button onClick={() => setView('register')}>Enroll New</button>
-              <button onClick={handleLogout} className="logout-btn">Sign Out</button>
-            </motion.div>
-          </div>
+
+          <motion.div
+            className="nav-buttons"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <button onClick={() => { setView('list'); setEditingStudent(null); }}>Records</button>
+            <button onClick={() => setView('register')}>Enroll New</button>
+            <button onClick={handleLogout} className="logout-btn">Sign Out</button>
+          </motion.div>
         </header>
 
         <main className="relative">

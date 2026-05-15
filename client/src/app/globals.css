@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-secondary: var(--card-bg);
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #0f172a;
+  --card-bg: #f8fafc;
+  --primary: #eab308;
+  --border: #e2e8f0;
+  --input-bg: #f1f5f9;
+}
+
+.dark {
+  --bg: #030712;
+  --text: #f9fafb;
+  --card-bg: #111827;
+  --border: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.4);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app-container {
+  @apply max-w-[1200px] mx-auto px-6 py-12 relative z-10;
+}
+
+header {
+  @apply flex justify-between items-center mb-16 pb-6 border-b;
+  border-color: var(--border);
+}
+
+h1 {
+  @apply text-3xl font-black tracking-tight;
+}
+
+.nav-buttons {
+  @apply flex items-center gap-4;
+}
+
+button {
+  @apply bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all hover:bg-indigo-500 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50;
+}
+
+.logout-btn {
+  @apply bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white;
+}
+
+.form-container, .list-container {
+  @apply bg-transparent p-0 border-none shadow-none;
+}
+
+.form-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
+}
+
+.full-width {
+  @apply md:col-span-2;
+}
+
+.form-group label {
+  @apply text-sm font-medium mb-2 block;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  @apply w-full rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+table {
+  @apply w-full border-separate border-spacing-y-2;
+}
+
+th {
+  @apply text-left px-4 py-3 text-xs font-bold uppercase tracking-wider;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+td {
+  @apply px-4 py-4 border-y first:border-l first:rounded-l-xl last:border-r last:rounded-r-xl;
+  background-color: var(--card-bg);
+  border-color: var(--border);
+}
+
+tr:hover td {
+  @apply border-indigo-500/30;
+  background-color: color-mix(in srgb, var(--card-bg), var(--primary) 5%);
+}
+
+.edit-btn {
+  @apply bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-3 py-1.5 text-xs mr-2 hover:bg-blue-500 hover:text-white;
+}
+
+.delete-btn {
+  @apply bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 px-3 py-1.5 text-xs hover:bg-red-500 hover:text-white;
+}
+
+.button-group {
+  @apply flex gap-3 justify-end mt-8;
+}
+
+.cancel-btn {
+  @apply bg-transparent border hover:bg-black/5 dark:hover:bg-white/5;
+  color: var(--text);
+  opacity: 0.7;
+  border-color: var(--border);
+}
+
+/* Step Indicator Styles */
+.step-indicator {
+  @apply flex justify-between items-center mb-10 relative px-4;
+}
+
+.step-indicator::before {
+  content: '';
+  @apply absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 -z-10;
+}
+
+.step-item {
+  @apply flex flex-col items-center gap-2 relative z-10;
+}
+
+.step-circle {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300;
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.step-item.active .step-circle {
+  @apply border-indigo-600 bg-indigo-600 text-white scale-110 shadow-lg shadow-indigo-500/20;
+}
+
+.step-item.completed .step-circle {
+  @apply border-green-500 bg-green-500 text-white;
+}
+
+.step-label {
+  @apply text-xs font-semibold opacity-60 uppercase tracking-wider;
+}
+
+.step-item.active .step-label {
+  @apply opacity-100 text-indigo-600 dark:text-indigo-400;
+}
+
+.step-progress-bar {
+  @apply absolute top-1/2 left-0 h-0.5 bg-indigo-600 -translate-y-1/2 -z-10 transition-all duration-500;
+}

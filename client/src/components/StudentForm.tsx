@@ -167,7 +167,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="relative min-h-[350px]">
+        <form onSubmit={handleSubmit} className="relative min-h-[350px]" onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}>
           <AnimatePresence mode="wait" custom={currentStep}>
             <motion.div
               key={currentStep}

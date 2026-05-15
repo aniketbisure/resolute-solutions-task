@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "seed": "tsx src/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,7 +18,8 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.6.2"
+    "mongoose": "^9.6.2",
+    "tsx": "^4.21.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -26,7 +28,6 @@
     "@types/mongoose": "^5.11.96",
     "@types/node": "^25.7.0",
     "ts-node-dev": "^2.0.0",
-    "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   }
 }

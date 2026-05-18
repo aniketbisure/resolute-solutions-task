@@ -97,7 +97,8 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
         <h2 className="text-2xl font-bold">Encrypted Records</h2>
         {error && <span className="text-red-400 text-sm">{error}</span>}
       </div>
-      <div className="overflow-x-auto">
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto">
         <table>
           <thead>
             <tr>
@@ -135,6 +136,47 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {students.map((student, idx) => (
+          <motion.div
+            key={student._id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.05 }}
+            className="p-5 rounded-xl border border-white/10 dark:border-white/5 space-y-4"
+            style={{ backgroundColor: 'var(--card-bg)' }}
+          >
+            <div className="flex justify-between items-start gap-4">
+              <div>
+                <h3 className="font-bold text-lg text-indigo-600 dark:text-indigo-300">{student.fullName}</h3>
+                <p className="text-sm opacity-70 mt-1 break-all">{student.email}</p>
+              </div>
+              <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 text-center">
+                {student.courseEnrolled}
+              </span>
+            </div>
+            
+            <div className="text-sm opacity-70">
+              <span className="font-semibold text-foreground">Contact: </span>
+              {student.phoneNumber}
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-white/5">
+              <button className="edit-btn" onClick={() => onEdit(student)}>Modify</button>
+              <button 
+                className="delete-btn" 
+                onClick={() => handleDelete(student._id)}
+                disabled={student._id === currentStudentId}
+                title={student._id === currentStudentId ? "You cannot delete your own record" : ""}
+              >
+                Revoke
+              </button>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </SpotlightCard>
   );

@@ -37,7 +37,7 @@ body {
 }
 
 header {
-  @apply flex justify-between items-center mb-16 pb-6 border-b;
+  @apply flex flex-col md:flex-row justify-between items-center gap-6 mb-16 pb-6 border-b text-center md:text-left;
   border-color: var(--border);
 }
 
@@ -46,7 +46,7 @@ h1 {
 }
 
 .nav-buttons {
-  @apply flex items-center gap-4;
+  @apply flex flex-wrap justify-center items-center gap-3 sm:gap-4;
 }
 
 button {
@@ -152,7 +152,7 @@ tr:hover td {
 }
 
 .step-label {
-  @apply text-xs font-semibold opacity-60 uppercase tracking-wider;
+  @apply text-[10px] sm:text-xs font-semibold opacity-60 uppercase tracking-wider;
 }
 
 .step-item.active .step-label {

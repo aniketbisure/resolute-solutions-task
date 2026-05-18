@@ -14,6 +14,7 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
   const [students, setStudents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentStudentId, setCurrentStudentId] = useState<string | null>(null);
 
   const fetchStudents = async () => {
     try {
@@ -34,6 +35,19 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
         return result;
       });
       setStudents(decryptedData);
+
+      // Verify if currently logged-in student still exists
+      const currentStudentId = localStorage.getItem('studentId');
+      if (currentStudentId) {
+        const exists = decryptedData.some((s: any) => s._id === currentStudentId);
+        if (!exists) {
+          toast.error('Your account has been deleted or is inactive. Session terminated.');
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('studentId');
+          window.location.href = '/login';
+          return;
+        }
+      }
     } catch (err: any) {
       setError('System unavailable. Please try again later.');
     } finally {
@@ -43,6 +57,9 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
 
   useEffect(() => {
     fetchStudents();
+    if (typeof window !== 'undefined') {
+      setCurrentStudentId(localStorage.getItem('studentId'));
+    }
   }, []);
 
   const handleDelete = async (id: string) => {
@@ -50,6 +67,16 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
       try {
         await api.delete(`/student/${id}`);
         toast.success('Record revoked successfully');
+
+        const currentStudentId = localStorage.getItem('studentId');
+        if (currentStudentId === id) {
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('studentId');
+          toast.info('Your account has been deleted. Logging out...');
+          window.location.href = '/login';
+          return;
+        }
+
         fetchStudents();
       } catch (err: any) {
         toast.error('Deletion failed');
@@ -95,7 +122,14 @@ const StudentList: React.FC<StudentListProps> = ({ onEdit }) => {
                 <td className="opacity-70">{student.phoneNumber}</td>
                 <td className="text-right space-x-2">
                   <button className="edit-btn" onClick={() => onEdit(student)}>Modify</button>
-                  <button className="delete-btn" onClick={() => handleDelete(student._id)}>Revoke</button>
+                  <button 
+                    className="delete-btn" 
+                    onClick={() => handleDelete(student._id)}
+                    disabled={student._id === currentStudentId}
+                    title={student._id === currentStudentId ? "You cannot delete your own record" : ""}
+                  >
+                    Revoke
+                  </button>
                 </td>
               </motion.tr>
             ))}

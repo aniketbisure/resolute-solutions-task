@@ -17,6 +17,7 @@ interface StudentFormProps {
 const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const totalSteps = student ? 2 : 3;
   
   const [formData, setFormData] = useState({
@@ -95,6 +96,9 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
       return;
     }
 
+    setIsSubmitting(true);
+    const toastId = toast.loading(student ? 'Updating profile on Render server...' : 'Enrolling student on Render server...');
+
     try {
       const encryptedData: any = {};
       const fullPhoneNumber = `${formData.countryCode}${formData.phoneNumber}`;
@@ -115,15 +119,17 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
 
       if (student) {
         await api.put(`/student/${student._id}`, encryptedData);
-        toast.success('Profile updated successfully');
+        toast.success('Profile updated successfully', { id: toastId });
       } else {
         await api.post('/register', encryptedData);
-        toast.success('Enrollment successful');
+        toast.success('Enrollment successful', { id: toastId });
       }
       onSuccess();
     } catch (error: any) {
       const message = error.response?.data?.error || 'Operation failed';
-      toast.error(message);
+      toast.error(message, { id: toastId });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -185,19 +191,19 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Full Name</label>
-                    <input name="fullName" value={formData.fullName} onChange={handleChange} required placeholder="John Doe" />
+                    <input name="fullName" value={formData.fullName} onChange={handleChange} required placeholder="John Doe" disabled={isSubmitting} />
                   </div>
                   <div className="form-group">
                     <label>Email Address</label>
-                    <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="john@example.com" />
+                    <input name="email" type="email" value={formData.email} onChange={handleChange} required placeholder="john@example.com" disabled={isSubmitting} />
                   </div>
                   <div className="form-group">
                     <label>Date of Birth</label>
-                    <input name="dob" type="date" value={formData.dob} onChange={handleChange} required />
+                    <input name="dob" type="date" value={formData.dob} onChange={handleChange} required disabled={isSubmitting} />
                   </div>
                   <div className="form-group">
                     <label>Gender</label>
-                    <select name="gender" value={formData.gender} onChange={handleChange} required className="appearance-none">
+                    <select name="gender" value={formData.gender} onChange={handleChange} required className="appearance-none" disabled={isSubmitting}>
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -212,19 +218,19 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
                   <div className="form-group">
                     <label>Phone Number</label>
                     <div className="flex gap-2">
-                      <select name="countryCode" value={formData.countryCode} onChange={handleChange} className="!w-24 shrink-0">
+                      <select name="countryCode" value={formData.countryCode} onChange={handleChange} className="!w-24 shrink-0" disabled={isSubmitting}>
                         {countryCodes.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
                       </select>
-                      <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required placeholder="9876543210" className="flex-1 min-w-0" />
+                      <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required placeholder="9876543210" className="flex-1 min-w-0" disabled={isSubmitting} />
                     </div>
                   </div>
                   <div className="form-group">
                     <label>Enrolled Course</label>
-                    <input name="courseEnrolled" value={formData.courseEnrolled} onChange={handleChange} required placeholder="Computer Science" />
+                    <input name="courseEnrolled" value={formData.courseEnrolled} onChange={handleChange} required placeholder="Computer Science" disabled={isSubmitting} />
                   </div>
                   <div className="form-group full-width">
                     <label>Permanent Address</label>
-                    <textarea name="address" value={formData.address} onChange={handleChange} required rows={3} placeholder="Full street address..." />
+                    <textarea name="address" value={formData.address} onChange={handleChange} required rows={3} placeholder="Full street address..." disabled={isSubmitting} />
                   </div>
                 </div>
               )}
@@ -242,12 +248,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
                         required
                         placeholder="••••••••"
                         className="pr-12"
+                        disabled={isSubmitting}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 p-1 bg-transparent border-none hover:bg-white/10 rounded-md transition-colors"
                         aria-label={showPassword ? "Hide password" : "Show password"}
+                        disabled={isSubmitting}
                       >
                         {showPassword ? <EyeOff size={18} className="opacity-60" /> : <Eye size={18} className="opacity-60" />}
                       </button>
@@ -261,20 +269,27 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel 
 
           <div className="flex justify-between items-center mt-12 pt-6 border-t border-white/5">
             {currentStep > 1 ? (
-              <button type="button" onClick={prevStep} className="cancel-btn flex items-center gap-2">
+              <button type="button" onClick={prevStep} className="cancel-btn flex items-center gap-2" disabled={isSubmitting}>
                 <ArrowLeft size={18} /> Back
               </button>
             ) : (
-              onCancel ? <button type="button" onClick={onCancel} className="cancel-btn">Discard</button> : <div />
+              onCancel ? <button type="button" onClick={onCancel} className="cancel-btn" disabled={isSubmitting}>Discard</button> : <div />
             )}
 
             {currentStep < totalSteps ? (
-              <button type="button" onClick={nextStep} className="flex items-center gap-2">
+              <button type="button" onClick={nextStep} className="flex items-center gap-2" disabled={isSubmitting}>
                 Next Step <ArrowRight size={18} />
               </button>
             ) : (
-              <button type="submit" className="px-10 bg-green-600 hover:bg-green-500">
-                {student ? 'Save Changes' : 'Complete Enrollment'}
+              <button type="submit" className="px-10 bg-green-600 hover:bg-green-500 flex items-center gap-2 justify-center" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                    {student ? 'Saving...' : 'Enrolling...'}
+                  </>
+                ) : (
+                  student ? 'Save Changes' : 'Complete Enrollment'
+                )}
               </button>
             )}
           </div>

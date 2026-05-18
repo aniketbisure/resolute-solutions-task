@@ -129,6 +129,12 @@ export const updateStudent = async (req: Request, res: Response) => {
 export const deleteStudent = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const loggedInStudentId = req.headers['x-logged-in-user-id'];
+
+    if (loggedInStudentId && loggedInStudentId === id) {
+      return res.status(403).json({ error: 'You are not allowed to delete your own record.' });
+    }
+
     const deletedStudent = await Student.findByIdAndDelete(id);
     if (!deletedStudent) return res.status(404).json({ message: 'Student not found' });
     res.json({ message: 'Student deleted successfully' });

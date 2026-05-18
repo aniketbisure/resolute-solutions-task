@@ -15,7 +15,10 @@ export default function Home() {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!loggedIn) {
+    const studentId = localStorage.getItem('studentId');
+    if (!loggedIn || !studentId) {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('studentId');
       router.push('/login');
     } else {
       setIsLoggedIn(true);
@@ -24,6 +27,7 @@ export default function Home() {
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('studentId');
     setIsLoggedIn(false);
     router.push('/login');
   };

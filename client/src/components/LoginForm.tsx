@@ -31,6 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
 
       toast.success('Access Granted');
       localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('studentId', response.data.studentId);
       onLoginSuccess(response.data.studentId);
     } catch (err: any) {
       const message = err.response?.data?.message || 'Login failed';
